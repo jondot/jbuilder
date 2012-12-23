@@ -54,10 +54,11 @@ class Jbuilder < JbuilderProxy
   @@key_formatter = KeyFormatter.new
   @@ignore_nil    = false
 
-  def initialize(key_formatter = @@key_formatter.clone, ignore_nil = @@ignore_nil)
+  def initialize(key_formatter = @@key_formatter.clone, ignore_nil = @@ignore_nil, formatter = nil)
     @attributes = ::ActiveSupport::OrderedHash.new
     @key_formatter = key_formatter
     @ignore_nil = ignore_nil
+    @formatter = formatter || ::MultiJson
   end
 
   # Dynamically set a key value pair.
@@ -244,7 +245,7 @@ class Jbuilder < JbuilderProxy
 
   # Encodes the current builder as JSON.
   def target!
-    ::MultiJson.encode @attributes
+    @formatter.encode @attributes
   end
 
   protected
